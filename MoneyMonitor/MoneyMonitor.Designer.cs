@@ -101,7 +101,7 @@ namespace MoneyMonitor
                     }
                     else
                     {
-                        if (m_Warning.Visible)
+                        if (m_Warning != null && m_Warning.Visible)
                             m_Warning.DoClose();
 
                         ChangeState(tState.eState_Idle);

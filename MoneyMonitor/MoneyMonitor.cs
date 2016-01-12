@@ -108,9 +108,15 @@ namespace MoneyMonitor
         {
             bool Ret = false;
 
-            Process[] pname = Process.GetProcessesByName("msmoney");
-            if (pname.Length != 0)
-                Ret = true;
+            Process[] processes = Process.GetProcessesByName("msmoney");
+            foreach (Process process in processes)
+            {
+                if (process.VirtualMemorySize64 != 0)
+                {
+                    Ret = true;
+                    break;
+                }
+            }
 
             return Ret;
         }
@@ -119,19 +125,20 @@ namespace MoneyMonitor
         {
             bool Ret = false;
 
-            Process[] pname = Process.GetProcessesByName("msmoney");
-            if (pname.Length != 0)
+            Process[] processes = Process.GetProcessesByName("msmoney");
+            foreach (Process process in processes)
             {
-                Process Money = pname[0];
-
-                if (Money.MainWindowHandle != IntPtr.Zero)
+                if (process.MainWindowHandle != IntPtr.Zero)
                 {
-                    AutomationElement Window = AutomationElement.FromHandle(Money.MainWindowHandle);
+                    AutomationElement Window = AutomationElement.FromHandle(process.MainWindowHandle);
 
                     Debug.WriteLine("Offscreen: " + Window.Current.IsOffscreen);
 
                     if (!Window.Current.IsOffscreen)
+                    {
                         Ret = true;
+                        break;
+                    }
                 }
             }
 
